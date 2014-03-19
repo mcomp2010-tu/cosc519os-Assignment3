@@ -1,45 +1,54 @@
-#include  <stdio.h>
-#include  <string.h>
-#include  <sys/types.h>
-#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include<unistd.h>
 
-#define   BUF_SIZE   100
-int retTime = 0;
-
-void waitFor (unsigned int secs) {
-    retTime = time(0) + secs;     // Get finishing time.
-    while (time(0) < retTime);    // Loop until it arrives.
-}
-
-int main()
+ int main()
 {
-	pid_t  pid;
-	int    i=0;
-	char   buf[BUF_SIZE];
- 
-	/* fork another process */
+    char c;
+    int waitCounter = 4;
+    int i;
+    pid_t pid;
+    pid_t pid1;
+    pid_t pid2;
+    pid_t pid3;
 
-	pid = fork();
-	pid = fork();
-	if (pid < 0) { /* error occurred */
-		fprintf(stderr, "Fork Failed");
-		exit(-1);
-	}
-	else if (pid == 0) { /* child process */
-		
-		
-		while(1) {
-			i++;
-			sprintf(buf, "Hello World! from pid %d, value = %d\n", getpid(), i);
-			write(1, buf, strlen(buf));
-			waitFor(1);
-		} 
-	}
-	else { /* parent process */
-		/* parent will wait for the child to complete */
-		wait (NULL);
-		printf ("Child Complete");
-		exit(0);
-	}
+    for(i = 0; i<=4; i++)
+    {
+        //fork another process
+        pid = fork();
+
+        //if the pid is negative, error
+            if(pid < 0 )
+            {
+                fprintf(stderr, "Fork Failed");
+                exit(-1);
+            }
+            //if pid is 0, I am a child process
+            if(pid == 0)
+            {
+             int num = i;
+             char buf[5];
+
+             sprintf(buf, "%d", i);
+
+              
+            }
+
+    }
+
+    //wait for child process to complete
+    while(waitCounter >0)
+    {
+        wait(NULL);
+        waitCounter--;
+    }
+
+          printf("\nChild processes Complete.\n");
+           printf("Parent pid: ");
+           printf("%d", getpid());
+           exit(0);
+
+
+    return 1;
 }
-
